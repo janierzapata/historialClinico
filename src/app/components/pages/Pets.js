@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 
-export const Form = () => {
+export const Pets = () => {
   const refTitle = useRef("");
   const refDesc = useRef("");
 
