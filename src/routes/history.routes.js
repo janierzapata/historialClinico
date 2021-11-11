@@ -25,17 +25,29 @@ router.get("/user/:id", async (req, res) => {
   res.json(us);
 });
 
+//GET user by doc
+router.get("/user/doc/:doc", async (req, res) => {
+  const us = await user.findOne({ document: req.params.doc });
+  res.json(us);
+});
 // ADD User
 router.post("/user", async (req, res) => {
-  const { name, lastName, typeDocument, document, status, gender } = req.body; 
-  const us = new user({ name, lastName, typeDocument, document, status, gender });
+  const { name, lastName, typeDocument, document, status, gender } = req.body;
+  const us = new user({
+    name,
+    lastName,
+    typeDocument,
+    document,
+    status,
+    gender,
+  });
   await us.save();
   res.json({ status: "user Saved" });
 });
 
 // UPDATE  User
 router.put("/user/:id", async (req, res) => {
-  const { name, lastName, typeDocument, document, status, gender } = req.body; 
+  const { name, lastName, typeDocument, document, status, gender } = req.body;
   const newuser = { name, lastName, typeDocument, document, status, gender };
   await user.findByIdAndUpdate(req.params.id, newuser);
   res.json({ status: "user Updated" });
@@ -62,9 +74,15 @@ router.get("/pet/:id", async (req, res) => {
   res.json(pt);
 });
 
+// GET pet by user
+router.get("/pet/user/:id", async (req, res) => {
+  const pt = await pet.find({user:req.params.id});
+  res.json(pt);
+});
+
 // ADD pet
 router.post("/pet", async (req, res) => {
-  const { user, name, race, gender} = req.body; 
+  const { user, name, race, gender } = req.body;
   const pt = new pet({ user, name, race, gender });
   await pt.save();
   res.json({ status: "pet Saved" });
@@ -72,7 +90,7 @@ router.post("/pet", async (req, res) => {
 
 // UPDATE  pet
 router.put("/pet/:id", async (req, res) => {
-  const { user, name, race, gender} = req.body; 
+  const { user, name, race, gender } = req.body;
   const newpet = { user, name, race, gender };
   await pet.findByIdAndUpdate(req.params.id, newpet);
   res.json({ status: "pet Updated" });
@@ -102,20 +120,60 @@ router.get("/history/:id", async (req, res) => {
 
 // ADD a new history
 router.post("/history", async (req, res) => {
-  const { pet, temperature, weight, heartRate, breatheRate, time, feeding, habitat, notes } = req.body;
-  const hstry = new history({ pet, temperature, weight, heartRate, breatheRate, time, feeding, habitat, notes });
+  const {
+    pet,
+    temperature,
+    weight,
+    heartRate,
+    breatheRate,
+    time,
+    feeding,
+    habitat,
+    notes,
+  } = req.body;
+  const hstry = new history({
+    pet,
+    temperature,
+    weight,
+    heartRate,
+    breatheRate,
+    time,
+    feeding,
+    habitat,
+    notes,
+  });
   await hstry.save();
   res.json({ status: "history Saved" });
 });
 
 // UPDATE a new history
 router.put("/history/:id", async (req, res) => {
-  const { pet, temperature, weight, heartRate, breatheRate, time, feeding, habitat, notes } = req.body;
-  const newhistory = { pet, temperature, weight, heartRate, breatheRate, time, feeding, habitat, notes };
+  const {
+    pet,
+    temperature,
+    weight,
+    heartRate,
+    breatheRate,
+    time,
+    feeding,
+    habitat,
+    notes,
+  } = req.body;
+  const newhistory = {
+    pet,
+    temperature,
+    weight,
+    heartRate,
+    breatheRate,
+    time,
+    feeding,
+    habitat,
+    notes,
+  };
   await history.findByIdAndUpdate(req.params.id, newhistory);
   res.json({ status: "history Updated" });
 });
-  
+
 router.delete("/history/:id", async (req, res) => {
   await history.findByIdAndRemove(req.params.id);
   res.json({ status: "history Deleted" });

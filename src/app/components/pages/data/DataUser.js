@@ -1,6 +1,6 @@
 import React from "react";
 
-export const DataUser = ({ data, openForm, deleteUser, showPets, getData }) => {
+export const DataUser = ({ data, openForm, deleteUser, showPets, getData,  }) => {
   return (
     <tbody>
       {data.map((item, i) => (
@@ -59,7 +59,10 @@ export const DataUser = ({ data, openForm, deleteUser, showPets, getData }) => {
             <button
               type="button"
               className="btn btn-outline-secondary"
-              onClick={() => showPets(item)}
+              onClick={() => {
+                showPets(item);
+                
+              }}
             >
               See more...
             </button>

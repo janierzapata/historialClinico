@@ -77,7 +77,7 @@ export const UserForm = ({
             </div>
             <div className="form-floating mb-3">
               <input
-                type="text"
+                type="number"
                 className="form-control"
                 name="status"
                 id="floatingInput"
@@ -101,7 +101,7 @@ export const UserForm = ({
 
           <button
             type="submit"
-            className="btn btn-dark"
+            className="btn btn-dark mb-5"
             onClick={() => {
               updateUser();
               getData();

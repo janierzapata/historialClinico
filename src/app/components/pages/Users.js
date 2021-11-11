@@ -11,7 +11,8 @@ export const Users = () => {
   const [add, setAdd] = useState(false);
   const [btnAdd, setBtnAdd] = useState(false);
 
-  const [pets, setPets] = useState({})
+  const [pets, setPets] = useState([]);
+  const [item, setItem] = useState({});
 
   const refName = useRef("");
   const refLast = useRef("");
@@ -32,9 +33,7 @@ export const Users = () => {
     getData();
   }, []);
 
-  useEffect(() => {
-
-  }, [data]);
+  useEffect(() => {}, [refName]);
 
   const getData = () => {
     fetch(url)
@@ -64,7 +63,7 @@ export const Users = () => {
     })
       .then((res) => {
         if (res.status === 200) {
-          alert("registro exitoso");
+          alert("Successful registration");
           refNameAdd.current.value = "";
           refLastAdd.current.value = "";
           refTpDocAdd.current.value = "";
@@ -93,12 +92,25 @@ export const Users = () => {
     }
   };
 
-  const showPets = (item) => {
+  const showPets = (itm) => {
     setForm(false);
     setInfo(true);
     setAdd(false);
-    refId.current.value = item._id;
-    refName.current.value = item.name.split(" ")[0];
+    setItem(itm);
+
+    const name = itm.name.split();
+    const id = itm._id;
+    refId.current.value = id;
+    refName.current.value = name[0];
+
+    fetch("/api/histories/pet/user/" + id)
+      .then((res) => res.json())
+      .then((res) => {
+        setPets(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const openForm = ({
@@ -142,7 +154,7 @@ export const Users = () => {
     })
       .then((res) => {
         if (res.status === 200) {
-          alert("Actualizacion exitosa");
+          alert("successful update");
           refId.current.value = "";
           refName.current.value = "";
           refLast.current.value = "";
@@ -204,7 +216,7 @@ export const Users = () => {
               <th scope="col-3">Gender</th>
               <th scope="col-3"></th>
               <th scope="col-3"></th>
-              <th scope="col-3"></th>
+              <th scope="col-3">Show Pets</th>
             </tr>
           </thead>
           <DataUser
@@ -274,13 +286,26 @@ export const Users = () => {
               }}
             ></button>
           </div>
-          <div className="container justify-content-center mt-5 d-flex ">
+          <div className="container justify-content-center my-5 d-flex ">
             <div className="col-8">
-              <div className="text-center">
-                <h1>{refName.current.value+ "'s pets"}</h1>
+              <div className="text-center mb-5">
+                <h1 className="">{refName.current.value + "'s pets"}</h1>
               </div>
-              <div className="mt-5">
-                
+              <div className="d-flex flex-wrap justify-content-around ">
+                {pets.map((pt, i) => (
+                  <div className="card col-3 mx-2 my-3" key={i + 100}>
+                    <div className="card-header text-center"><h3>{pt.name}</h3></div>
+                    <div className="card-body">
+                      <h5 className="card-title"> </h5>
+                      <p className="card-text"><b>Name: </b>{pt.name}</p>
+                      <p className="card-text"><b>Race: </b>{pt.race}</p>
+                      <p className="card-text"><b>Gender: </b>{pt.gender}</p>
+                      <a href="#" className="btn btn-primary">
+                        Go somewhere
+                      </a>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

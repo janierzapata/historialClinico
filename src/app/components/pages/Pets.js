@@ -1,30 +1,50 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 
 export const Pets = () => {
-  const refTitle = useRef("");
-  const refDesc = useRef("");
+  const refUser = useRef("");
+  const refName = useRef("");
+  const refRace = useRef("");
+  const refGender = useRef("");
 
-  const addTask = (e) => {
-    e.preventDefault();
+  const addPet = () => {
+    const user = refUser.current.value;
+    const name = refName.current.value;
+    const race = refRace.current.value;
+    const gender = refGender.current.value;
 
-    const form = {
-      title: refTitle.current.value,
-      description: refDesc.current.value,
-    };
-
-    fetch("/api/tasks", {
-      method: "POST",
-      body: JSON.stringify(form),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
+    fetch("/api/histories/user/doc/" + user)
+      .then((res) => res.json())
       .then((res) => {
-        if(res.status === 200){
-            alert("registro exitoso")
-            refTitle.current.value = "";
-            refDesc.current.value = "";
+        console.log(res)
+        if (!!res) {
+          const form = {
+            user:res._id,
+            name,
+            race,
+            gender,
+          };
+          fetch("/api/histories/pet", {
+            method: "POST",
+            body: JSON.stringify(form),
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          })
+            .then((res) => {
+              if (res.status === 200) {
+                alert("Successful registration");
+                refUser.current.value = "";
+                refName.current.value = "";
+                refRace.current.value = "";
+                refGender.current.value = "";
+              }
+            })
+            .catch((err) => {
+              alert(err);
+            });
+        } else {
+          alert("this user does not exist, please register it");
         }
       })
       .catch((err) => {
@@ -34,36 +54,67 @@ export const Pets = () => {
 
   return (
     <div className="container justify-content-center mt-5 d-flex">
-      <form className="col-8  " onSubmit={addTask}>
+      <form className="col-8  ">
         <div className="text-center">
-          <h1> Add New Task</h1>
+          <h1> Add Pet</h1>
         </div>
         <div className="mt-5">
+          <h3>
+            User Data
+            <hr />
+          </h3>
+          <div className="form-floating mb-3">
+            <input
+              type="number"
+              className="form-control"
+              name="user"
+              id="floatingInput"
+              placeholder="Document"
+              ref={refUser}
+            />
+            <label>User Document</label>
+          </div>
+
+          <h3>
+            Pet Data
+            <hr />
+          </h3>
           <div className="form-floating mb-3">
             <input
               type="text"
               className="form-control"
-              name="title"
+              name="name"
               id="floatingInput"
-              placeholder="title"
-              ref={refTitle}
+              placeholder="name"
+              ref={refName}
             />
-            <label>Title</label>
+            <label>Name</label>
           </div>
           <div className="form-floating mb-3">
             <input
               type="text"
               className="form-control"
-              name="desc"
+              name="race"
               id="floatingInput"
-              placeholder="description"
-              ref={refDesc}
+              placeholder="race"
+              ref={refRace}
             />
-            <label>Description</label>
+            <label>Race</label>
+          </div>
+          <div className="form-floating mb-3">
+            <input
+              type="text"
+              className="form-control"
+              name="gender"
+              id="floatingInput"
+              placeholder="gender"
+              ref={refGender}
+            />
+            <label>Gender</label>
           </div>
         </div>
 
-        <button type="submit" className="btn btn-dark">
+        <button type="button" className="btn btn-dark mb-5" onClick={() => addPet()}>
           Add
         </button>
       </form>

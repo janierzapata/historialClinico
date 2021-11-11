@@ -7,12 +7,11 @@ import { Users } from "./components/pages/Users";
 export const App = () => {
   return (
     <BrowserRouter>
-    <Nav />
+      <Nav />
       <Routes>
         <Route path="/" element={<Users />} />
         <Route path="/users" element={<Users />} />
-        <Route path="/users/form" element={<Users />} />
-        {/* <Route path="/form" element={<Form />} /> */}
+        <Route path="/pets" element={<Pets />} />
       </Routes>
     </BrowserRouter>
   );
