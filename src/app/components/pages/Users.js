@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { DataUser } from "./data/DataUser";
 import { UserAdd } from "./forms/user/UserAdd";
 import { UserForm } from "./forms/user/UserForm";
@@ -84,6 +85,7 @@ export const Users = () => {
         method: "DELETE",
       })
         .then((res) => {
+          alert("successful removal");
           console.log(res);
         })
         .catch((err) => {
@@ -111,6 +113,23 @@ export const Users = () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const deletePet = (id) => {
+    if (confirm("Are you sure you want to delete")) {
+      fetch("/api/histories/pet" + `/${id}`, {
+        method: "DELETE",
+      })
+        .then((res) => {
+          alert("successful removal");
+          setForm(false);
+          setInfo(false);
+          setAdd(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const openForm = ({
@@ -294,15 +313,35 @@ export const Users = () => {
               <div className="d-flex flex-wrap justify-content-around ">
                 {pets.map((pt, i) => (
                   <div className="card col-3 mx-2 my-3" key={i + 100}>
-                    <div className="card-header text-center"><h3>{pt.name}</h3></div>
+                    <div className="card-header text-center">
+                      <h3>{pt.name}</h3>
+                    </div>
                     <div className="card-body">
-                      <h5 className="card-title"> </h5>
-                      <p className="card-text"><b>Name: </b>{pt.name}</p>
-                      <p className="card-text"><b>Race: </b>{pt.race}</p>
-                      <p className="card-text"><b>Gender: </b>{pt.gender}</p>
-                      <a href="#" className="btn btn-primary">
-                        Go somewhere
-                      </a>
+                      <p className="card-text">
+                        <b>Race: </b>
+                        {pt.race}
+                      </p>
+                      <p className="card-text">
+                        <b>Gender: </b>
+                        {pt.gender}
+                      </p>
+                      <div className="d-grid gap-2">
+                        <button className="btn btn-info mx-1">
+                          show Histories
+                        </button>
+                        <button className="btn btn-success mx-1">
+                          <Link className="nav-link" to="/">
+                            add History
+                          </Link>
+                          
+                        </button>
+                        <button
+                          className="btn btn-danger mx-1"
+                          onClick={() => deletePet(pt._id)}
+                        >
+                          del pet
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
