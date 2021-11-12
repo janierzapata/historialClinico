@@ -5,10 +5,15 @@ export const HistoryForm = (props) => {
   const refWeight = useRef("");
   const refHeartRate = useRef("");
   const refBreatheRate = useRef("");
-  const refTime = useRef("");
   const refFeeding = useRef("");
   const refHabitat = useRef("");
   const refNotes = useRef("");
+  const refTime = useRef("");
+  
+  const today = new Date();
+  const dd = today.getDate();
+  const mm = today.getMonth() + 1; //January is 0!
+  const yyyy = today.getFullYear();
 
   const addHistory = () => {
     const form = {
@@ -48,7 +53,7 @@ export const HistoryForm = (props) => {
         alert(err);
       });
 
-      props.setFormHist(false)
+    props.setFormHist(false);
   };
 
   return (
@@ -111,6 +116,8 @@ export const HistoryForm = (props) => {
           <div className="d-flex justify-content-around">
             <div className="form-floating mb-3 col-5">
               <input
+                disabled
+                value={`${dd}/${mm}/${yyyy}`}
                 type="text"
                 ref={refTime}
                 className="form-control"

@@ -76,7 +76,7 @@ router.get("/pet/:id", async (req, res) => {
 
 // GET pet by user
 router.get("/pet/user/:id", async (req, res) => {
-  const pt = await pet.find({user:req.params.id});
+  const pt = await pet.find({ user: req.params.id });
   res.json(pt);
 });
 
@@ -116,6 +116,12 @@ router.get("/history", async (req, res) => {
 router.get("/history/:id", async (req, res) => {
   const hstry = await history.findById(req.params.id);
   res.json(hstry);
+});
+
+//GET history by petId
+router.get("/history/pet/:id", async (req, res) => {
+  const pt = await history.find({ pet: req.params.id });
+  res.json(pt);
 });
 
 // ADD a new history

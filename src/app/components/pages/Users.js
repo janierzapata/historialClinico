@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { DataHistories } from "./data/DataHistories";
 import { DataUser } from "./data/DataUser";
 import { HistoryForm } from "./forms/history/HistoryForm";
 import { UserAdd } from "./forms/user/UserAdd";
@@ -14,6 +15,10 @@ export const Users = () => {
   const [btnAdd, setBtnAdd] = useState(false);
 
   const [formHist, setFormHist] = useState(false);
+  const [dataHist, setDataHist] = useState(false);
+  const [histories, setHistories] = useState([]);
+  const [formHistUp, setFormHistUp] = useState(false);
+
 
   const [pets, setPets] = useState([]);
   const [idPet, setIdPet] = useState("");
@@ -98,25 +103,19 @@ export const Users = () => {
     }
   };
 
-  const openForm = ({
-    _id,
-    name,
-    lastName,
-    typeDocument,
-    document,
-    status,
-    gender,
-  }) => {
+  const openForm = (prop) => {
     setForm(true);
     setInfo(false);
     setAdd(false);
-    refId.current.value = _id;
-    refName.current.value = name;
-    refLast.current.value = lastName;
-    refTpDoc.current.value = typeDocument;
-    refDoc.current.value = document;
-    refStatus.current.value = status;
-    refGender.current.value = gender;
+    setDataHist(false);
+    setFormHistUp(false)
+    refId.current.value = prop._id;
+    refName.current.value = prop.name;
+    refLast.current.value = prop.lastName;
+    refTpDoc.current.value = prop.typeDocument;
+    refDoc.current.value = prop.document;
+    refStatus.current.value = prop.status;
+    refGender.current.value = prop.gender;
   };
 
   const updateUser = () => {
@@ -194,53 +193,24 @@ export const Users = () => {
     }
   };
 
-  //HISTORY
+ 
+  const showHistories = (itm) => {
+    setForm(false);
+    setInfo(true);
+    setAdd(false);
 
-  const addPet = () => {
-    const user = refUser.current.value;
-    const name = refName.current.value;
-    const race = refRace.current.value;
-    const gender = refGender.current.value;
+    const id = itm._id;
 
-    fetch("/api/histories/user/doc/" + user)
+    fetch("/api/histories/history/pet/" + id)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
-        if (!!res) {
-          const form = {
-            user: res._id,
-            name,
-            race,
-            gender,
-          };
-          fetch("/api/histories/pet", {
-            method: "POST",
-            body: JSON.stringify(form),
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-          })
-            .then((res) => {
-              if (res.status === 200) {
-                alert("Successful registration");
-                refUser.current.value = "";
-                refName.current.value = "";
-                refRace.current.value = "";
-                refGender.current.value = "";
-              }
-            })
-            .catch((err) => {
-              alert(err);
-            });
-        } else {
-          alert("this user does not exist, please register it");
-        }
+        setHistories(res);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+  
 
   return (
     <div>
@@ -255,6 +225,8 @@ export const Users = () => {
               setAdd(true);
               setForm(false);
               setInfo(false);
+              setDataHist(false)
+              setFormHistUp(false)
             }}
           >
             {btnAdd ? (
@@ -356,6 +328,8 @@ export const Users = () => {
               onClick={() => {
                 setInfo(false);
                 setFormHist(false);
+                setDataHist(false)
+
               }}
             ></button>
           </div>
@@ -380,14 +354,22 @@ export const Users = () => {
                         {pt.gender}
                       </p>
                       <div className="d-grid gap-2">
-                        <button className="btn btn-info mx-1">
+                        <button
+                          className="btn btn-info mx-1"
+                          onClick={() => {
+                            setDataHist(true);
+                            setFormHist(false);
+                            showHistories(pt)
+                          }}
+                        >
                           show Histories
                         </button>
                         <button
                           className="btn btn-success mx-1"
                           onClick={() => {
                             setFormHist(true);
-                            setIdPet(pt._id);
+                            setDataHist(false);
+                            setIdPet(pt);
                           }}
                         >
                           add History
@@ -416,12 +398,28 @@ export const Users = () => {
               aria-label="Close"
               onClick={() => {
                 setFormHist(false);
-                
               }}
             ></button>
           </div>
 
-          <HistoryForm  idPet={idPet} setFormHist={setFormHist}/>
+          <HistoryForm idPet={idPet} setFormHist={setFormHist} />
+        </div>
+
+        <div className="text-center"hidden={!dataHist}>
+          <hr />
+          <div className="container d-flex flex-row-reverse">
+            <button
+              type="button"
+              className="btn-close"
+              aria-label="Close"
+              onClick={() => {
+                setDataHist(false);
+                setFormHistUp(false)
+              }}
+            ></button>
+          </div>
+          <h1 className="text-center">Histories</h1>
+          <DataHistories histories={histories} setDataHist={setDataHist} setFormHistUp={setFormHistUp} formHistUp={formHistUp}/>
         </div>
       </div>
     </div>
