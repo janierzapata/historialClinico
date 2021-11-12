@@ -1,17 +1,6 @@
 import React from "react";
 
-export const UserForm = ({
-  refName,
-  refLast,
-  refTpDoc,
-  refDoc,
-  refStatus,
-  refGender,
-  updateUser,
-  setForm,
-  form,
-  getData,
-}) => {
+export const UserForm = (props) => {
   return (
     <div>
       <hr />
@@ -21,7 +10,7 @@ export const UserForm = ({
           className="btn-close"
           aria-label="Close"
           onClick={() => {
-            setForm(!form);
+            props.setForm(!props.form);
           }}
         ></button>
       </div>
@@ -38,7 +27,7 @@ export const UserForm = ({
                 name="name"
                 id="floatingInput"
                 placeholder="title"
-                ref={refName}
+                ref={props.refName}
               />
               <label>Name</label>
             </div>
@@ -49,7 +38,7 @@ export const UserForm = ({
                 name="lastName"
                 id="floatingInput"
                 placeholder="description"
-                ref={refLast}
+                ref={props.refLast}
               />
               <label>Last Name</label>
             </div>
@@ -60,7 +49,7 @@ export const UserForm = ({
                 name="tpDoc"
                 id="floatingInput"
                 placeholder="title"
-                ref={refTpDoc}
+                ref={props.refTpDoc}
               />
               <label>Type Document</label>
             </div>
@@ -71,7 +60,7 @@ export const UserForm = ({
                 name="doc"
                 id="floatingInput"
                 placeholder="description"
-                ref={refDoc}
+                ref={props.refDoc}
               />
               <label>document</label>
             </div>
@@ -82,7 +71,7 @@ export const UserForm = ({
                 name="status"
                 id="floatingInput"
                 placeholder="title"
-                ref={refStatus}
+                ref={props.refStatus}
               />
               <label>Status</label>
             </div>
@@ -93,7 +82,7 @@ export const UserForm = ({
                 name="gender"
                 id="floatingInput"
                 placeholder="description"
-                ref={refGender}
+                ref={props.refGender}
               />
               <label>Gender</label>
             </div>
@@ -103,8 +92,8 @@ export const UserForm = ({
             type="submit"
             className="btn btn-dark mb-5"
             onClick={() => {
-              updateUser();
-              getData();
+              props.updateUser();
+              props.getData();
             }}
           >
             Update

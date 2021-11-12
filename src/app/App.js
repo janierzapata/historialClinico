@@ -4,7 +4,7 @@ import { Nav } from "./components/navbar/Nav";
 import { Pets } from "./components/pages/Pets";
 import { Users } from "./components/pages/Users";
 
-export const App = () => {
+const App = () => {
   return (
     <BrowserRouter>
       <Nav />
@@ -12,8 +12,10 @@ export const App = () => {
         <Route path="/" element={<Users />} />
         <Route path="/users" element={<Users />} />
         <Route path="/pets" element={<Pets />} />
-        <Route path="/history" element={<Pets />} />
+        <Route path="/history/add" element={<Pets />} />
       </Routes>
     </BrowserRouter>
   );
 };
+
+export default App;

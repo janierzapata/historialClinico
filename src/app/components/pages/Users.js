@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { DataUser } from "./data/DataUser";
+import { HistoryForm } from "./forms/history/HistoryForm";
 import { UserAdd } from "./forms/user/UserAdd";
 import { UserForm } from "./forms/user/UserForm";
 
@@ -12,7 +13,10 @@ export const Users = () => {
   const [add, setAdd] = useState(false);
   const [btnAdd, setBtnAdd] = useState(false);
 
+  const [formHist, setFormHist] = useState(false);
+
   const [pets, setPets] = useState([]);
+  const [idPet, setIdPet] = useState("");
   const [item, setItem] = useState({});
 
   const refName = useRef("");
@@ -94,44 +98,6 @@ export const Users = () => {
     }
   };
 
-  const showPets = (itm) => {
-    setForm(false);
-    setInfo(true);
-    setAdd(false);
-    setItem(itm);
-
-    const name = itm.name.split();
-    const id = itm._id;
-    refId.current.value = id;
-    refName.current.value = name[0];
-
-    fetch("/api/histories/pet/user/" + id)
-      .then((res) => res.json())
-      .then((res) => {
-        setPets(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const deletePet = (id) => {
-    if (confirm("Are you sure you want to delete")) {
-      fetch("/api/histories/pet" + `/${id}`, {
-        method: "DELETE",
-      })
-        .then((res) => {
-          alert("successful removal");
-          setForm(false);
-          setInfo(false);
-          setAdd(false);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
-
   const openForm = ({
     _id,
     name,
@@ -182,6 +148,93 @@ export const Users = () => {
           refStatus.current.value = "";
           refGender.current.value = "";
           setForm(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  //PETS
+  const showPets = (itm) => {
+    setForm(false);
+    setInfo(true);
+    setAdd(false);
+    setItem(itm);
+
+    const name = itm.name.split();
+    const id = itm._id;
+    refId.current.value = id;
+    refName.current.value = name[0];
+
+    fetch("/api/histories/pet/user/" + id)
+      .then((res) => res.json())
+      .then((res) => {
+        setPets(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const deletePet = (id) => {
+    if (confirm("Are you sure you want to delete")) {
+      fetch("/api/histories/pet" + `/${id}`, {
+        method: "DELETE",
+      })
+        .then((res) => {
+          alert("successful removal");
+          setForm(false);
+          setInfo(false);
+          setAdd(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  //HISTORY
+
+  const addPet = () => {
+    const user = refUser.current.value;
+    const name = refName.current.value;
+    const race = refRace.current.value;
+    const gender = refGender.current.value;
+
+    fetch("/api/histories/user/doc/" + user)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        if (!!res) {
+          const form = {
+            user: res._id,
+            name,
+            race,
+            gender,
+          };
+          fetch("/api/histories/pet", {
+            method: "POST",
+            body: JSON.stringify(form),
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          })
+            .then((res) => {
+              if (res.status === 200) {
+                alert("Successful registration");
+                refUser.current.value = "";
+                refName.current.value = "";
+                refRace.current.value = "";
+                refGender.current.value = "";
+              }
+            })
+            .catch((err) => {
+              alert(err);
+            });
+        } else {
+          alert("this user does not exist, please register it");
         }
       })
       .catch((err) => {
@@ -301,7 +354,8 @@ export const Users = () => {
               className="btn-close"
               aria-label="Close"
               onClick={() => {
-                setInfo(!info);
+                setInfo(false);
+                setFormHist(false);
               }}
             ></button>
           </div>
@@ -329,11 +383,14 @@ export const Users = () => {
                         <button className="btn btn-info mx-1">
                           show Histories
                         </button>
-                        <button className="btn btn-success mx-1">
-                          <Link className="nav-link" to="/">
-                            add History
-                          </Link>
-                          
+                        <button
+                          className="btn btn-success mx-1"
+                          onClick={() => {
+                            setFormHist(true);
+                            setIdPet(pt._id);
+                          }}
+                        >
+                          add History
                         </button>
                         <button
                           className="btn btn-danger mx-1"
@@ -348,6 +405,23 @@ export const Users = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        <div hidden={!formHist}>
+          <hr />
+          <div className="container d-flex flex-row-reverse">
+            <button
+              type="button"
+              className="btn-close"
+              aria-label="Close"
+              onClick={() => {
+                setFormHist(false);
+                
+              }}
+            ></button>
+          </div>
+
+          <HistoryForm  idPet={idPet} setFormHist={setFormHist}/>
         </div>
       </div>
     </div>

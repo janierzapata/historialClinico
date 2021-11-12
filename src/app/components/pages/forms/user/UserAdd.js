@@ -1,18 +1,6 @@
 import React from "react";
 
-export const UserAdd = ({
-  refNameAdd,
-  refLastAdd,
-  refTpDocAdd,
-  refDocAdd,
-  refStatusAdd,
-  refGenderAdd,
-  refId,
-  setAdd,
-  add,
-  addUser,
-  getData
-}) => {
+export const UserAdd = (props) => {
   return (
     <div>
       <hr />
@@ -22,8 +10,8 @@ export const UserAdd = ({
           className="btn-close"
           aria-label="Close"
           onClick={() => {
-            setAdd(!add);
-            refId.current.value = "";
+            props.setAdd(!props.add);
+            props.refId.current.value = "";
           }}
         ></button>
       </div>
@@ -40,7 +28,7 @@ export const UserAdd = ({
                 name="name"
                 id="floatingInput"
                 placeholder="title"
-                ref={refNameAdd}
+                ref={props.refNameAdd}
               />
               <label>Name</label>
             </div>
@@ -51,7 +39,7 @@ export const UserAdd = ({
                 name="lastName"
                 id="floatingInput"
                 placeholder="description"
-                ref={refLastAdd}
+                ref={props.refLastAdd}
               />
               <label>Last Name</label>
             </div>
@@ -62,29 +50,29 @@ export const UserAdd = ({
                 name="tpDoc"
                 id="floatingInput"
                 placeholder="title"
-                ref={refTpDocAdd}
+                ref={props.refTpDocAdd}
               />
               <label>Type Document</label>
             </div>
             <div className="form-floating mb-3">
               <input
-                type="text"
+                type="number"
                 className="form-control"
                 name="doc"
                 id="floatingInput"
                 placeholder="description"
-                ref={refDocAdd}
+                ref={props.refDocAdd}
               />
               <label>document</label>
             </div>
             <div className="form-floating mb-3">
               <input
-                type="number"
+                type="text"
                 className="form-control"
                 name="status"
                 id="floatingInput"
                 placeholder="title"
-                ref={refStatusAdd}
+                ref={props.refStatusAdd}
               />
               <label>Status</label>
             </div>
@@ -95,7 +83,7 @@ export const UserAdd = ({
                 name="gender"
                 id="floatingInput"
                 placeholder="description"
-                ref={refGenderAdd}
+                ref={props.refGenderAdd}
               />
               <label>Gender</label>
             </div>
@@ -105,8 +93,8 @@ export const UserAdd = ({
             type="submit"
             className="btn btn-dark mb-5"
             onClick={() => {
-              addUser();
-              getData();
+              props.addUser();
+              props.getData();
             }}
           >
             Add
